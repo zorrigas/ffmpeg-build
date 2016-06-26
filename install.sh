@@ -1,10 +1,14 @@
 #!/bin/bash
-# easy 1 click build
+# Easy 1 click build - https://trac.ffmpeg.org/wiki/CompilationGuide/Centos
+# La paja de copiar y pegar me ganó xD
 
-yum install autoconf automake cmake freetype-devel gcc gcc-c++ git libtool make mercurial nasm pkgconfig zlib-devel
+# Install tools to make
+yum install autoconf automake cmake freetype-devel gcc gcc-c++ git libtool make mercurial nasm pkgconfig zlib-devel openssl-devel
 
+# Install make dir for all sources, you can keep for updates
 mkdir ~/ffmpeg_sources
 
+# Install Yasm
 cd ~/ffmpeg_sources
 git clone --depth 1 git://github.com/yasm/yasm.git
 cd yasm
@@ -13,6 +17,8 @@ autoreconf -fiv
 make
 make install
 make distclean
+
+# Install x264
 cd ~/ffmpeg_sources
 git clone --depth 1 git://git.videolan.org/x264
 cd x264
@@ -20,12 +26,16 @@ PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/f
 make
 make install
 make distclean
+
+# Install x265
 cd ~/ffmpeg_sources
 hg clone https://bitbucket.org/multicoreware/x265
 cd ~/ffmpeg_sources/x265/build/linux
 cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED:bool=off ../../source
 make
 make install
+
+# Install AAC
 cd ~/ffmpeg_sources
 git clone --depth 1 git://git.code.sf.net/p/opencore-amr/fdk-aac
 cd fdk-aac
@@ -34,6 +44,8 @@ autoreconf -fiv
 make
 make install
 make distclean
+
+# Install LAME
 cd ~/ffmpeg_sources
 curl -L -O http://downloads.sourceforge.net/project/lame/lame/3.99/lame-3.99.5.tar.gz
 tar xzvf lame-3.99.5.tar.gz
@@ -42,6 +54,8 @@ cd lame-3.99.5
 make
 make install
 make distclean
+
+# Install Opus
 cd ~/ffmpeg_sources
 git clone http://git.opus-codec.org/opus.git
 cd opus
@@ -50,6 +64,8 @@ autoreconf -fiv
 make
 make install
 make distclean
+
+# Install libOGG
 cd ~/ffmpeg_sources
 curl -O http://downloads.xiph.org/releases/ogg/libogg-1.3.2.tar.gz
 tar xzvf libogg-1.3.2.tar.gz
@@ -58,6 +74,8 @@ cd libogg-1.3.2
 make
 make install
 make distclean
+
+# Install libVorbis
 cd ~/ffmpeg_sources
 curl -O http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.4.tar.gz
 tar xzvf libvorbis-1.3.4.tar.gz
@@ -66,6 +84,8 @@ LDFLAGS="-L$HOME/ffmeg_build/lib" CPPFLAGS="-I$HOME/ffmpeg_build/include" ./conf
 make
 make install
 make distclean
+
+# Install libVPX
 cd ~/ffmpeg_sources
 git clone --depth 1 https://chromium.googlesource.com/webm/libvpx.git
 cd libvpx
@@ -73,11 +93,15 @@ cd libvpx
 make
 make install
 make clean
+
+# Install FFMPEG
 cd ~/ffmpeg_sources
 git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg
 cd ffmpeg
-PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --extra-cflags="-I$HOME/ffmpeg_build/include" --extra-ldflags="-L$HOME/ffmpeg_build/lib" --bindir="$HOME/bin" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265
+PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --extra-cflags="-I$HOME/ffmpeg_build/include" --extra-ldflags="-L$HOME/ffmpeg_build/lib" --bindir="$HOME/bin" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265 --enable-openssl
 make
 make install
 make distclean
 hash -r
+
+# Finish ;D
